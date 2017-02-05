@@ -28,25 +28,70 @@ class FSM {
         return this.state;
     }
 
-    changeState(state) {
+
+changeState(state) {
+    var except = true;
+    try{
+        for(var statKey of this.mapRelations.keys()) {
+        if (state == statKey){
         this.state = state;
         this.states.push(state);
         this.callChange = true;
-       
+        except = false;
+      }
+    }
+        if(except){
+         
+        throw new Error("It isn't correct state!")
+      }
+    }
+       catch (e){
+         alert(e.name+" "+e.message)
+
+      }
     }
 
-    trigger(event) {
+    // trigger(event) {
+    //     var currentState = this.state;
+    //     for(var statKey of this.mapRelations.keys()) { 
+    //         if(statKey == currentState){
+    //              for(var eve of (this.mapRelations.get(statKey)).keys()) { 
+    //                 if(eve == event){
+    //                    this.changeState(this.mapRelations.get(statKey).get(eve));
+    //                 }
+    //             }
+    //         }      
+    //     }       
+    // }
+
+
+
+ trigger(event) {
+      try{
+         var except = true;
         var currentState = this.state;
         for(var statKey of this.mapRelations.keys()) { 
             if(statKey == currentState){
                  for(var eve of (this.mapRelations.get(statKey)).keys()) { 
                     if(eve == event){
                        this.changeState(this.mapRelations.get(statKey).get(eve));
-                    }
+                       except = false;
+                    } 
                 }
-            }      
-        }       
+
+            } 
+               
+        }
+         if (except) {
+                      throw new Error("It isn't correct event!")
+                    }    
+        }
+       catch (e){
+         alert(e.name+" "+e.message)
+
+      }      
     }
+
 
      reset() {
         var initStat = this.states[0];
@@ -67,8 +112,7 @@ class FSM {
             for(var statKey of this.mapRelations.keys()) { 
                  for(var eve of (this.mapRelations.get(statKey)).keys()) { 
                     if(event == eve){
-                        console.log(event + ' > ' + eve + ' > ' + statKey);
-                        arrStatForEvent.push(statKey);
+                              arrStatForEvent.push(statKey);
                     }  
                 }      
             } 
